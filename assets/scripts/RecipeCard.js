@@ -1,106 +1,169 @@
 class RecipeCard extends HTMLElement {
-  constructor() {
-    // Part 1 Expose - TODO
+    constructor() {
+        // Part 1 Expose - TODO
+        super();
+        // You'll want to attach the shadow DOM here
+        var shadow = this.attachShadow({mode: 'open'});
+    }
 
-    // You'll want to attach the shadow DOM here
-  }
+    set data(data) {
+        // This is the CSS that you'll use for your recipe cards
+        const styleElem = document.createElement('style');
+        const styles = `
+        * {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        a {
+            text-decoration: none;
+        }
 
-  set data(data) {
-    // This is the CSS that you'll use for your recipe cards
-    const styleElem = document.createElement('style');
-    const styles = `
-      * {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-      
-      a {
-        text-decoration: none;
-      }
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        article {
+            align-items: center;
+            border: 1px solid rgb(223, 225, 229);
+            border-radius: 8px;
+            display: grid;
+            grid-template-rows: 118px 56px 14px 18px 15px 36px;
+            height: auto;
+            row-gap: 5px;
+            padding: 0 16px 16px 16px;
+            width: 178px;
+        }
 
-      a:hover {
-        text-decoration: underline;
-      }
-      
-      article {
-        align-items: center;
-        border: 1px solid rgb(223, 225, 229);
-        border-radius: 8px;
-        display: grid;
-        grid-template-rows: 118px 56px 14px 18px 15px 36px;
-        height: auto;
-        row-gap: 5px;
-        padding: 0 16px 16px 16px;
-        width: 178px;
-      }
+        div.rating {
+            align-items: center;
+            column-gap: 5px;
+            display: flex;
+        }
+        
+        div.rating > img {
+            height: auto;
+            display: inline-block;
+            object-fit: scale-down;
+            width: 78px;
+        }
 
-      div.rating {
-        align-items: center;
-        column-gap: 5px;
-        display: flex;
-      }
-      
-      div.rating > img {
-        height: auto;
-        display: inline-block;
-        object-fit: scale-down;
-        width: 78px;
-      }
+        article > img {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            height: 118px;
+            object-fit: cover;
+            margin-left: -16px;
+            width: calc(100% + 32px);
+        }
 
-      article > img {
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        height: 118px;
-        object-fit: cover;
-        margin-left: -16px;
-        width: calc(100% + 32px);
-      }
+        p.ingredients {
+            height: 32px;
+            line-height: 16px;
+            padding-top: 4px;
+            overflow: hidden;
+        }
+        
+        p.organization {
+            color: black !important;
+        }
 
-      p.ingredients {
-        height: 32px;
-        line-height: 16px;
-        padding-top: 4px;
-        overflow: hidden;
-      }
-      
-      p.organization {
-        color: black !important;
-      }
+        p.title {
+            display: -webkit-box;
+            font-size: 16px;
+            height: 36px;
+            line-height: 18px;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
 
-      p.title {
-        display: -webkit-box;
-        font-size: 16px;
-        height: 36px;
-        line-height: 18px;
-        overflow: hidden;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
+        p:not(.title), span, time {
+            color: #70757A;
+            font-size: 12px;
+        }
+        `;
+        styleElem.innerHTML = styles;
 
-      p:not(.title), span, time {
-        color: #70757A;
-        font-size: 12px;
-      }
-    `;
-    styleElem.innerHTML = styles;
+        // Here's the root element that you'll want to attach all of your other elements to
+        const card = document.createElement('article');
 
-    // Here's the root element that you'll want to attach all of your other elements to
-    const card = document.createElement('article');
+        // Some functions that will be helpful here:
+        //    document.createElement()
+        //    document.querySelector()
+        //    element.classList.add()
+        //    element.setAttribute()
+        //    element.appendChild()
+        //    & All of the helper functions below
 
-    // Some functions that will be helpful here:
-    //    document.createElement()
-    //    document.querySelector()
-    //    element.classList.add()
-    //    element.setAttribute()
-    //    element.appendChild()
-    //    & All of the helper functions below
+        // Make sure to attach your root element and styles to the shadow DOM you
+        // created in the constructor()
 
-    // Make sure to attach your root element and styles to the shadow DOM you
-    // created in the constructor()
+        // Part 1 Expose - TODO
 
-    // Part 1 Expose - TODO
-  }
+        // using cardTemplate.html
+
+        const img = document.createElement("img");
+        img.setAttribute("alt", "Recipe Title");
+        img.setAttribute("src", getImage(data));
+
+        const title = document.createElement("p");
+        title.classList.add("title");
+        const articleLink = document.createElement("a");
+        articleLink.setAttribute("href", getUrl(data));
+        articleLink.textContent = getTitle(data);
+        title.appendChild(articleLink);
+
+        const organization = document.createElement("p");
+        organization.classList.add("organization");
+        organization.textContent = getOrganization(data);
+
+        const rating = document.createElement("div");
+        rating.classList.add("rating");
+        const reviewNum = document.createElement("span");
+        
+        let totalNum = getRatingsCount(data);
+
+        if(totalNum != null) {
+            let starNum = Math.round(getRatingsValue(data));
+            // getRatingsValue(data)
+
+            reviewNum.textContent = starNum;
+            const stars = document.createElement("img");
+            const total = document.createElement("span");
+            stars.setAttribute("src", `assets/images/icons/${starNum}-star.svg`);
+            total.textContent = `(${totalNum})`;
+
+            rating.appendChild(reviewNum);
+            rating.appendChild(stars);
+            rating.appendChild(total);
+        }
+        else {
+            reviewNum.textContent = "No Reviews";
+            rating.appendChild(reviewNum);
+        }
+    
+        const time = document.createElement("time");
+        time.textContent = convertTime(getTime(data))
+
+        const ingredients = document.createElement("p");
+        ingredients.classList.add("ingredients");
+        ingredients.textContent = createIngredientList(getRecipes(data));
+
+
+        // Append all the elements
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(organization);
+        card.appendChild(rating);
+        card.appendChild(time);
+        card.appendChild(ingredients);
+
+        // Appending to Shadow-DOM
+        this.shadowRoot.appendChild(card);
+        this.shadowRoot.appendChild(styleElem);
+    }
 }
 
 
@@ -130,6 +193,24 @@ function searchForKey(object, key) {
   });
   return value;
 }
+
+/**
+ * Extract the image from the given recipe schema JSON object
+ * @param {Object} data Raw recipe JSON to find the URL of
+ * @returns {String} If found, it returns the image as a string, otherwise null
+ */
+ function getImage(data) {
+    if(data.image) {
+        return data.image.url;
+    }
+    if (data['@graph']) {
+      for (let i = 0; i < data['@graph'].length; i++) {
+        if (data['@graph'][i]['@type'] == 'Article') return data['@graph'][i]['thumbnailUrl'];
+      }
+    };
+    console.log("here");
+    return null;
+  }
 
 /**
  * Extract the URL from the given recipe schema JSON object
@@ -162,6 +243,65 @@ function getOrganization(data) {
     }
   };
   return null;
+}
+
+function getTitle(data) {
+    if (data.headline) return data.headline;
+    if (data['@graph']) {
+      for (let i = 0; i < data['@graph'].length; i++) {
+        if (data['@graph'][i]['@type'] == 'Article') return data['@graph'][i]['headline'];
+      }
+    };
+    return null;
+  }
+
+function getRatingsCount(data) {
+    if (data['@graph']) {
+        for (let i = 0; i < data['@graph'].length; i++) {
+            // console.log(data['@graph'][i]["@type"]);
+            if (data['@graph'][i]["@type"] == 'Recipe') {
+                return data['@graph'][i].aggregateRating.ratingCount;
+            }
+        };
+        return null;
+    }
+}
+
+function getRatingsValue(data) {
+    if (data['@graph']) {
+        for (let i = 0; i < data['@graph'].length; i++) {
+            // console.log(data['@graph'][i]["@type"]);
+            if (data['@graph'][i]["@type"] == 'Recipe') {
+                return data['@graph'][i].aggregateRating.ratingValue;
+            }
+        };
+        return null;
+    }
+}
+
+function getTime(data) {
+    if (data.totalTime) return data.totalTime;
+    if (data['@graph']) {
+        for (let i = 0; i < data['@graph'].length; i++) {
+            // console.log(data['@graph'][i]["@type"]);
+            if (data['@graph'][i]["@type"] == 'Recipe') {
+                return data['@graph'][i].totalTime;
+            }
+        };
+        return null;
+    }
+}
+
+function getRecipes(data) {
+    if (data.recipeIngredient) return data.recipeIngredient;
+    if (data['@graph']) {
+        for (let i = 0; i < data['@graph'].length; i++) {
+            if (data['@graph'][i]["@type"] == 'Recipe') {
+                return data['@graph'][i].recipeIngredient;
+            }
+        };
+        return null;
+    }
 }
 
 /**
