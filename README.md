@@ -1,7 +1,9 @@
 # Lab 6 - Starter
 
-Link: 
+Link: https://audreyzhao75.github.io/Lab6_Starter/  
 
-### Team
-Audrey Zhao
+---
+
+### Team (from Group 18)
+Audrey Zhao  
 Daniel Lam
